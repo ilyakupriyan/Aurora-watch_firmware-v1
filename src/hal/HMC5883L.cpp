@@ -35,7 +35,21 @@ void OswHal::setupHMC5883L(void)
 
 int OswHal::hmc5883_GetAzimuth(void)
 {
-	//TODO (Asimuth is heading)
+	
+	float heading = atan2(axis.YAxis, axis.XAxis);
+
+	// Correct for when signs are reversed.
+  	if(heading < 0)
+    	heading += 2*PI;
+    
+	// Check for wrap due to addition of declination.
+	if(heading > 2*PI)
+		heading -= 2*PI;
+
+	// Convert radians to degrees for readability.
+	float headingDegrees = heading * 180/M_PI; 	
+
+	return (int) headingDegrees;
 }
 
 int OswHal::hmc5883_GetX(void)
